@@ -6,6 +6,7 @@ const wormBody = [{ x: 11, y: 11 }];
 // variables
 let newElements = 0;
 
+
 // update worm
 export const updateWorm = () => {
   // add elements

@@ -1,46 +1,67 @@
-import React from "react";
-import { useRef } from "react";
-import { useCallback } from "react";
-import { useEffect } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
+import { useState } from "react";
+import Worm from "./logic/Worm";
 
 const Game = () => {
+  const { WORM_SPEED, updateWorm, drawWorm } = Worm();
   // constants
-  const WORM_SPEED = 1;
+  const gameBoard = useRef(null);
+  const lastRenderTime = useRef(null);
   // variables
-  let lastRenderTime = useRef(null);
   let isGaveOver = false;
+  const [isStop, setIsStop] = useState(false);
 
-  // methods
-  // main function
+  // helper
+  const update = useCallback(() => {
+    console.log(isStop);
+    if (!isStop) updateWorm();
+    // updateTarget();
+    // checkGameOver();
+  }, [updateWorm, isStop]);
+
+  // helper
+  const draw = useCallback(() => {
+    drawWorm(gameBoard.current);
+  }, [drawWorm]);
+
+  // main
   const main = useCallback(
     (currentTime) => {
       if (isGaveOver) return;
       // happy flow
-      window.requestAnimationFrame(main);
+      !isStop && window.requestAnimationFrame(main);
       const secondsSinceLastRender =
         (currentTime - lastRenderTime.current) / 1000;
       if (secondsSinceLastRender < 1 / WORM_SPEED) return;
       lastRenderTime.current = currentTime;
+      console.log(isStop);
       update();
       draw();
+
       console.log("work");
     },
-    [WORM_SPEED, lastRenderTime, isGaveOver]
+    [WORM_SPEED, lastRenderTime, isGaveOver, update, draw]
   );
 
-  // helping functions
-  // update
-  const update = () => {};
-
-  // draw
-  const draw = () => {};
+  const stop = () => {
+    setIsStop(true);
+    window.cancelAnimationFrame(main);
+  };
 
   useEffect(() => {
-    main();
+    console.log(isStop);
+    !isStop && requestAnimationFrame(main);
     return () => cancelAnimationFrame(main);
   }, [main]);
 
-  return <div className="game-board"></div>;
+  return (
+    <>
+      <div ref={gameBoard} className="game-board"></div>
+      <button onClick={stop} className="stop">
+        Stop
+      </button>
+    </>
+  );
 };
 
 export default Game;
