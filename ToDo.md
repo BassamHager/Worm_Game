@@ -4,3 +4,4 @@
 - add pause button
 - add scores and customized gaming options
 - add animations
+- fix pause button

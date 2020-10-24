@@ -60,25 +60,32 @@ body {
   border-radius: 50px;
 }
 .target {
-  background-color: hsl(50, 100%, 50%);
-  border: 0.25vmin solid black;
+  background: hsl(50, 100%, 50%);
+  border: 0.25vmin solid hsl(100, 100%, 50%);
+  border-radius: 50px;
 }
-.stop {
+/* .pause {
   float: right;
   height: 7rem;
   width: 7rem;
   position: fixed;
   top: 50%;
   right: 7%;
-}
-.stop:hover {
+  font: 1.5rem fantasy;
   background: red;
-  font-size: 2rem;
-  font-family: fantasy;
 }
-.stop:focus {
+.pause:hover {
+  font-size: 2rem;
+  border: none;
+  font-style: italic;
+  transition: all 0.5s ease-in-out;
+}
+.pause:focus {
   outline: none;
 }
+.play {
+  background: hsl(100, 100%, 20%);
+} */
 
 .footer {
   background: hsl(300, 50%, 5%);

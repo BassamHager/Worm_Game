@@ -1,65 +1,62 @@
-import React, { useEffect, useRef, useCallback } from "react";
-import { useState } from "react";
-import Worm from "./logic/Worm";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useContext } from "react";
+// import Target from "./logic/Target";
+// context
+import { AppContext } from "../context/AppContext";
 
 const Game = () => {
-  const { WORM_SPEED, updateWorm, drawWorm } = Worm();
-  // constants
+  // context
+  const { wormSpeed, updateWorm, drawWorm, drawTarget } = useContext(
+    AppContext
+  );
+  // const { drawTarget, updateTarget } = Target();
+  // inner state
   const gameBoard = useRef(null);
   const lastRenderTime = useRef(null);
-  // variables
-  let isGaveOver = false;
-  const [isStop, setIsStop] = useState(false);
-
-  // helper
-  const update = useCallback(() => {
-    console.log(isStop);
-    if (!isStop) updateWorm();
-    // updateTarget();
-    // checkGameOver();
-  }, [updateWorm, isStop]);
+  const [isGameOver] = useState(false);
 
   // helper
   const draw = useCallback(() => {
+    gameBoard.current.innerHTML = "";
     drawWorm(gameBoard.current);
-  }, [drawWorm]);
+    drawTarget(gameBoard.current);
+  }, [drawWorm, drawTarget]);
+
+  // helper
+  const update = useCallback(() => {
+    updateWorm();
+    // updateTarget();
+    // checkGameOver();
+  }, [updateWorm]);
 
   // main
   const main = useCallback(
     (currentTime) => {
-      if (isGaveOver) return;
+      if (isGameOver) return;
       // happy flow
-      !isStop && window.requestAnimationFrame(main);
+      window.requestAnimationFrame(main);
       const secondsSinceLastRender =
         (currentTime - lastRenderTime.current) / 1000;
-      if (secondsSinceLastRender < 1 / WORM_SPEED) return;
+      if (secondsSinceLastRender < 1 / wormSpeed) return;
       lastRenderTime.current = currentTime;
-      console.log(isStop);
       update();
       draw();
-
-      console.log("work");
+      console.log("...");
     },
-    [WORM_SPEED, lastRenderTime, isGaveOver, update, draw]
+    [wormSpeed, lastRenderTime, isGameOver, update, draw]
   );
 
-  const stop = () => {
-    setIsStop(true);
-    window.cancelAnimationFrame(main);
-  };
-
   useEffect(() => {
-    console.log(isStop);
-    !isStop && requestAnimationFrame(main);
+    requestAnimationFrame(main);
     return () => cancelAnimationFrame(main);
   }, [main]);
 
   return (
     <>
       <div ref={gameBoard} className="game-board"></div>
-      <button onClick={stop} className="stop">
-        Stop
-      </button>
+      {/* <button onClick={()=>setIsPaused(!isPaused)} className={`pause ${isPaused && "play"}`}>
+        {isPaused ? "Play" : "Pause"}
+      </button> */}
     </>
   );
 };
