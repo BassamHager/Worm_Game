@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const WormState = () => {
-  const [wormSpeed] = useState(1);
+  const [wormSpeed] = useState(5);
   const [wormBody, setWormBody] = useState([{ x: 11, y: 11 }]);
   const [expansionRate] = useState(3);
   const [newElements, setNewElements] = useState(1);
@@ -40,7 +40,6 @@ const WormState = () => {
         case "ArrowRight":
           if (lastInputDirection.x !== 0) break;
           inputDirection = { x: 1, y: 0 };
-          console.log(inputDirection);
           break;
         default:
           inputDirection = { x: 0, y: 0 };

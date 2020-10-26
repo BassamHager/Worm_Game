@@ -11,13 +11,19 @@ const Game = () => {
   );
   // const { drawTarget, updateTarget } = Target();
   // inner state
-  const gameBoard = useRef(null);
+  const gameBoardId = "gameBoardId";
+  const gameBoard = useRef();
+  const boardDiv = document.getElementById(gameBoardId);
+  if (boardDiv && gameBoard.current == null) {
+    gameBoard.current = boardDiv.getBoundingClientRect();
+  }
+
   const lastRenderTime = useRef(null);
   const [isGameOver] = useState(false);
 
   // helper
   const draw = useCallback(() => {
-    gameBoard.current.innerHTML = "";
+    // gameBoard.current.innerHTML = "";
     drawWorm(gameBoard.current);
     drawTarget(gameBoard.current);
   }, [drawWorm, drawTarget]);
@@ -53,10 +59,7 @@ const Game = () => {
 
   return (
     <>
-      <div ref={gameBoard} className="game-board"></div>
-      {/* <button onClick={()=>setIsPaused(!isPaused)} className={`pause ${isPaused && "play"}`}>
-        {isPaused ? "Play" : "Pause"}
-      </button> */}
+      <div id={gameBoardId} className="game-board" />
     </>
   );
 };
