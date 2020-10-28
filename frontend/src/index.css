@@ -45,24 +45,28 @@ body {
   background: hsl(250, 100%, 10%);
 }
 .game-board {
-  background-color: #333;
+  background-color: #222;
   width: 100vmin;
   height: 100%;
-  margin: auto;
-  display: grid;
-  grid-template-rows: repeat(21, 1fr);
-  grid-template-columns: repeat(21, 1fr);
-  /* border: yellow thin solid; */
+  position: relative;
+  /* margin: auto; */
+  /* display: flex; */
+}
+.dot {
+  position: absolute;
+  width: 4.75vmin;
+  height: 4.75%;
+  border-radius: 50%;
 }
 .worm {
   background-color: hsl(100, 100%, 50%);
   border: 0.25vmin solid black;
-  border-radius: 50px;
+  z-index: 2;
 }
 .target {
   background: hsl(50, 100%, 50%);
   border: 0.25vmin solid hsl(100, 100%, 50%);
-  border-radius: 50px;
+  z-index: 1;
 }
 /* .pause {
   float: right;

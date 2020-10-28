@@ -1,38 +1,27 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useContext } from "react";
-// import Target from "./logic/Target";
 // context
 import { AppContext } from "../context/AppContext";
 
 const Game = () => {
   // context
-  const { wormSpeed, updateWorm, drawWorm, drawTarget } = useContext(
-    AppContext
-  );
+  const { wormSpeed, updateWorm, drawWorm } = useContext(AppContext);
   // const { drawTarget, updateTarget } = Target();
   // inner state
-  const gameBoardId = "gameBoardId";
   const gameBoard = useRef();
-  const boardDiv = document.getElementById(gameBoardId);
-  if (boardDiv && gameBoard.current == null) {
-    gameBoard.current = boardDiv.getBoundingClientRect();
-  }
 
-  const lastRenderTime = useRef(null);
   const [isGameOver] = useState(false);
-
+  const lastRenderTime = useRef(null);
   // helper
   const draw = useCallback(() => {
-    // gameBoard.current.innerHTML = "";
+    gameBoard.current.innerHTML = "";
     drawWorm(gameBoard.current);
-    drawTarget(gameBoard.current);
-  }, [drawWorm, drawTarget]);
+    // updateWorm(gameBoard.current);
+  }, [drawWorm]);
 
   // helper
   const update = useCallback(() => {
-    updateWorm();
-    // updateTarget();
-    // checkGameOver();
+    // updateWorm();
   }, [updateWorm]);
 
   // main
@@ -45,11 +34,11 @@ const Game = () => {
         (currentTime - lastRenderTime.current) / 1000;
       if (secondsSinceLastRender < 1 / wormSpeed) return;
       lastRenderTime.current = currentTime;
-      update();
       draw();
+      update();
       console.log("...");
     },
-    [wormSpeed, lastRenderTime, isGameOver, update, draw]
+    [isGameOver, update, draw, wormSpeed, lastRenderTime]
   );
 
   useEffect(() => {
@@ -59,7 +48,13 @@ const Game = () => {
 
   return (
     <>
-      <div id={gameBoardId} className="game-board" />
+      {!isGameOver ? (
+        <div ref={gameBoard} className="game-board">
+          {/* <div></div> */}
+        </div>
+      ) : (
+        <div>Game Over!</div>
+      )}
     </>
   );
 };

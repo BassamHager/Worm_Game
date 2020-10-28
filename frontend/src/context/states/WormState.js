@@ -1,8 +1,12 @@
 import { useState } from "react";
 
 const WormState = () => {
-  const [wormSpeed] = useState(5);
-  const [wormBody, setWormBody] = useState([{ x: 11, y: 11 }]);
+  const [wormSpeed] = useState(1);
+  const [wormBody, setWormBody] = useState([
+    { x: 11, y: 11 },
+    { x: 12, y: 11 },
+    { x: 13, y: 11 },
+  ]);
   const [expansionRate] = useState(3);
   const [newElements, setNewElements] = useState(1);
   // variables
@@ -14,9 +18,10 @@ const WormState = () => {
   const drawWorm = (gameBoard) => {
     wormBody.forEach((el) => {
       const wormEl = document.createElement("div");
-      wormEl.style.gridRowStart = el.y;
-      wormEl.style.gridColumnStart = el.x;
+      wormEl.classList.add("dot");
       wormEl.classList.add("worm");
+      wormEl.style.left = `${(el.y - 1) * 5}%`;
+      wormEl.style.top = `${(el.x - 1) * 5}%`;
       gameBoard.appendChild(wormEl);
     });
   };
@@ -41,8 +46,11 @@ const WormState = () => {
           if (lastInputDirection.x !== 0) break;
           inputDirection = { x: 1, y: 0 };
           break;
-        default:
+        case "Enter":
           inputDirection = { x: 0, y: 0 };
+          break;
+        default:
+          console.log("wal");
       }
     });
     lastInputDirection = inputDirection;
@@ -64,11 +72,9 @@ const WormState = () => {
     for (let i = wormBody.length - 2; i >= 0; i--) {
       // change neg
       wormBody[i + 1] = { ...wormBody[i] };
-      setWormBody([...wormBody, (wormBody[i + 1] = { ...wormBody[i] })]);
+      // setWormBody([...wormBody, (wormBody[i + 1] = { ...wormBody[i] })]);
     }
-    // wormBody[0].x += inputDirection.x;
     setWormBody([...wormBody, { ...(wormBody[0].x += inputDirection.x) }]);
-    // wormBody[0].y += inputDirection.y;
     setWormBody([...wormBody, { ...(wormBody[0].y += inputDirection.y) }]);
   };
 

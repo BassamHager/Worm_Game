@@ -1,14 +1,15 @@
 import React from "react";
 import "./App.css";
-import Footer from "./components/layout/Footer";
+// components
 import Header from "./components/layout/Header";
+// import Sidebar from "./components/layout/Sidebar";
 import Main from "./components/layout/Main";
-import Sidebar from "./components/layout/Sidebar";
+import Footer from "./components/layout/Footer";
 
 const App = () => (
   <>
     <Header />
-    <Sidebar />
+    {/* <Sidebar /> */}
     <Main />
     <Footer />
   </>
