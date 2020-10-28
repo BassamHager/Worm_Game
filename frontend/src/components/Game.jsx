@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useCallback } from "react";
 import { useContext } from "react";
 // context
 import { AppContext } from "../context/AppContext";
@@ -6,28 +6,26 @@ import { AppContext } from "../context/AppContext";
 const Game = () => {
   // context
   const { wormSpeed, updateWorm, drawWorm } = useContext(AppContext);
-  // const { drawTarget, updateTarget } = Target();
+
   // inner state
   const gameBoard = useRef();
-
-  const [isGameOver] = useState(false);
   const lastRenderTime = useRef(null);
+
   // helper
   const draw = useCallback(() => {
     gameBoard.current.innerHTML = "";
     drawWorm(gameBoard.current);
-    // updateWorm(gameBoard.current);
-  }, [drawWorm]);
+    updateWorm(gameBoard.current);
+  }, [drawWorm, updateWorm]);
 
   // helper
-  const update = useCallback(() => {
-    // updateWorm();
-  }, [updateWorm]);
+  // const update = useCallback(() => {
+  //   updateWorm();
+  // }, [updateWorm]);
 
   // main
   const main = useCallback(
     (currentTime) => {
-      if (isGameOver) return;
       // happy flow
       window.requestAnimationFrame(main);
       const secondsSinceLastRender =
@@ -35,10 +33,10 @@ const Game = () => {
       if (secondsSinceLastRender < 1 / wormSpeed) return;
       lastRenderTime.current = currentTime;
       draw();
-      update();
+      // update();
       console.log("...");
     },
-    [isGameOver, update, draw, wormSpeed, lastRenderTime]
+    [draw, wormSpeed]
   );
 
   useEffect(() => {
@@ -48,10 +46,8 @@ const Game = () => {
 
   return (
     <>
-      {!isGameOver ? (
-        <div ref={gameBoard} className="game-board">
-          {/* <div></div> */}
-        </div>
+      {true ? (
+        <div ref={gameBoard} className="game-board" />
       ) : (
         <div>Game Over!</div>
       )}

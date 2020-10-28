@@ -6,21 +6,6 @@ const wormBody = [{ x: 11, y: 11 }];
 // variables
 let newElements = 0;
 
-
-// update worm
-export const updateWorm = () => {
-  // add elements
-  addEl();
-  // direction
-  const inputDirection = getInputDirection();
-  // movement
-  for (let i = wormBody.length - 2; i >= 0; i--) {
-    wormBody[i + 1] = { ...wormBody[i] };
-  }
-  wormBody[0].x += inputDirection.x;
-  wormBody[0].y += inputDirection.y;
-};
-
 // draw worm
 export const drawWorm = (gameBoard) => {
   wormBody.forEach((el) => {
@@ -56,3 +41,17 @@ export const getWormHead = () => wormBody[0];
 // check worm intersected
 export const isIntersected = () =>
   isTargetCaught(wormBody[0], { isIntersect: true });
+
+// update worm
+export const updateWorm = () => {
+  // add elements
+  addEl();
+  // direction
+  const inputDirection = getInputDirection();
+  // movement
+  for (let i = wormBody.length - 2; i >= 0; i--) {
+    wormBody[i + 1] = { ...wormBody[i] };
+  }
+  wormBody[0].x += inputDirection.x;
+  wormBody[0].y += inputDirection.y;
+};

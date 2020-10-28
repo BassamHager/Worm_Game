@@ -1,117 +1,108 @@
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 const WormState = () => {
-  const [wormSpeed] = useState(1);
-  const [wormBody, setWormBody] = useState([
+  const [wormSpeed] = useState(0.7);
+  const wormBody = [
     { x: 11, y: 11 },
-    { x: 12, y: 11 },
-    { x: 13, y: 11 },
-  ]);
-  const [expansionRate] = useState(3);
-  const [newElements, setNewElements] = useState(1);
-  // variables
-  let inputDirection = { x: 0, y: 0 };
-  let lastInputDirection = { x: 0, y: 0 };
+    { x: 11, y: 12 },
+    { x: 11, y: 13 },
+  ];
 
   // methods
   // draw worm
-  const drawWorm = (gameBoard) => {
-    wormBody.forEach((el) => {
-      const wormEl = document.createElement("div");
-      wormEl.classList.add("dot");
-      wormEl.classList.add("worm");
-      wormEl.style.left = `${(el.y - 1) * 5}%`;
-      wormEl.style.top = `${(el.x - 1) * 5}%`;
-      gameBoard.appendChild(wormEl);
-    });
-  };
-
-  // worm direction
-  const getInputDirection = () => {
-    window.addEventListener("keydown", (e) => {
-      switch (e.key) {
-        case "ArrowUp":
-          if (lastInputDirection.y !== 0) break;
-          inputDirection = { x: 0, y: -1 };
-          break;
-        case "ArrowDown":
-          if (lastInputDirection.y !== 0) break;
-          inputDirection = { x: 0, y: 1 };
-          break;
-        case "ArrowLeft":
-          if (lastInputDirection.x !== 0) break;
-          inputDirection = { x: -1, y: 0 };
-          break;
-        case "ArrowRight":
-          if (lastInputDirection.x !== 0) break;
-          inputDirection = { x: 1, y: 0 };
-          break;
-        case "Enter":
-          inputDirection = { x: 0, y: 0 };
-          break;
-        default:
-          console.log("wal");
-      }
-    });
-    lastInputDirection = inputDirection;
-    return inputDirection;
-  };
-
-  // expand worm
-  const expandWorm = (amount) => setNewElements(newElements + amount);
+  const drawWorm = useCallback(
+    (gameBoard) => {
+      wormBody.forEach((el) => {
+        const wormEl = document.createElement("div");
+        wormEl.classList.add("dot");
+        wormEl.classList.add("worm");
+        wormEl.style.left = `${(el.x - 1) * 5}%`;
+        wormEl.style.top = `${(el.y - 1) * 5}%`;
+        gameBoard.appendChild(wormEl);
+      });
+    },
+    [wormBody]
+  );
 
   // update worm
-  const updateWorm = () => {
-    // add elements
-    // addEl();
-    // direction
-    // inputDirection=getInputDirection()
-    getInputDirection();
-    // movement
-    // console.log(wormBody);
-    for (let i = wormBody.length - 2; i >= 0; i--) {
-      // change neg
-      wormBody[i + 1] = { ...wormBody[i] };
-      // setWormBody([...wormBody, (wormBody[i + 1] = { ...wormBody[i] })]);
+  let inputDirection = useRef({ x: 0, y: 0 });
+  let lastInputDirection = useRef({ x: 0, y: 0 });
+
+  window.addEventListener("keydown", (e) => {
+    switch (e.key) {
+      case "ArrowUp":
+        if (lastInputDirection.current.y !== 0) break;
+        inputDirection.current = { x: 0, y: -1 };
+        break;
+      case "ArrowDown":
+        if (lastInputDirection.current.y !== 0) break;
+        inputDirection.current = { x: 0, y: 1 };
+        break;
+      case "ArrowLeft":
+        if (lastInputDirection.current.x !== 0) break;
+        inputDirection.current = { x: -1, y: 0 };
+        break;
+      case "ArrowRight":
+        if (lastInputDirection.current.x !== 0) break;
+        inputDirection.current = { x: 1, y: 0 };
+        break;
+      default:
+        console.log("default");
     }
-    setWormBody([...wormBody, { ...(wormBody[0].x += inputDirection.x) }]);
-    setWormBody([...wormBody, { ...(wormBody[0].y += inputDirection.y) }]);
-  };
+  });
 
-  // // catch target
-  // const isTargetCaught = (target, { isIntersect = false } = {}) =>
-  //   wormBody.some((el, index) => {
-  //     if (isIntersect && index === 0) return false;
-  //     return el.x === target.x && el.y === target.y;
-  //   }); // try also tracking the head
+  const getInputDirection = useCallback(() => {
+    lastInputDirection.current = inputDirection.current;
+    return inputDirection.current;
+  }, []);
 
-  // // add element
-  // const addEl = () => {
-  //   for (let i = 0; i < NEW_ELEMENTS; i++) {
-  //     wormBody.push({ ...wormBody[wormBody.length - 1] });
-  //   }
-  //   NEW_ELEMENTS = 0;
-  // };
+  const updateWorm = useCallback(() => {
+    const { x, y } = getInputDirection();
+    console.log(getInputDirection());
+    for (let i = wormBody.length - 2; i >= 0; i--) {
+      wormBody[i + 1] = { ...wormBody[i] };
+    }
+    wormBody[0].x += x;
+    wormBody[0].y += y;
 
-  // // worm head
-  // const getWormHead = () => wormBody[0];
-
-  // // check worm intersected
-  // const isIntersected = () =>
-  //   isTargetCaught(wormBody[0], { isIntersect: true });
+    // const directions = {
+    //   up: { x: 0, y: -1 },
+    //   right: { x: 1, y: 0 },
+    //   down: { x: 0, y: 1 },
+    //   left: { x: -1, y: 0 },
+    //   paused: { x: 0, y: 0 },
+    // };
+    // const { up, right, down, left } = directions;
+    // window.addEventListener("keydown", (e) => {
+    //   switch (e.key) {
+    //     case "ArrowUp":
+    //       if (lastInputDirection.current.y !== 0) break;
+    //       inputDirection.current = up;
+    //       break;
+    //     case "ArrowDown":
+    //       if (lastInputDirection.current.y !== 0) break;
+    //       inputDirection.current = down;
+    //       break;
+    //     case "ArrowLeft":
+    //       if (lastInputDirection.current.x !== 0) break;
+    //       inputDirection.current = left;
+    //       break;
+    //     case "ArrowRight":
+    //       if (lastInputDirection.current.x !== 0) break;
+    //       inputDirection.current = right;
+    //       break;
+    //     default:
+    //       console.log("wal");
+    //   }
+    // });
+    // move
+  }, [getInputDirection, wormBody]);
 
   return {
     wormSpeed,
     wormBody,
-    setWormBody,
-    expansionRate,
-    newElements,
-    setNewElements,
-    inputDirection,
-    lastInputDirection,
     // methods
     drawWorm,
-    expandWorm,
     updateWorm,
   };
 };
