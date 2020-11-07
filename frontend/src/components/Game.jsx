@@ -15,13 +15,12 @@ const Game = () => {
   const draw = useCallback(() => {
     gameBoard.current.innerHTML = "";
     drawWorm(gameBoard.current);
-    updateWorm(gameBoard.current);
-  }, [drawWorm, updateWorm]);
+  }, [drawWorm]);
 
   // helper
-  // const update = useCallback(() => {
-  //   updateWorm();
-  // }, [updateWorm]);
+  const update = useCallback(() => {
+    updateWorm(gameBoard.current);
+  }, [updateWorm]);
 
   // main
   const main = useCallback(
@@ -33,10 +32,10 @@ const Game = () => {
       if (secondsSinceLastRender < 1 / wormSpeed) return;
       lastRenderTime.current = currentTime;
       draw();
-      // update();
+      update();
       console.log("...");
     },
-    [draw, wormSpeed]
+    [draw, update, wormSpeed]
   );
 
   useEffect(() => {

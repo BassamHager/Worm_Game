@@ -5,3 +5,4 @@
 - add scores and customized gaming options
 - add animations
 - fix pause button
+- before starting let worm length = 1
