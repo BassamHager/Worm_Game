@@ -5,7 +5,13 @@ import { AppContext } from "../context/AppContext";
 
 const Game = () => {
   // context
-  const { wormSpeed, updateWorm, drawWorm } = useContext(AppContext);
+  const {
+    wormSpeed,
+    updateWorm,
+    drawWorm,
+    drawTarget,
+    updateTarget,
+  } = useContext(AppContext);
 
   // inner state
   const gameBoard = useRef();
@@ -15,12 +21,14 @@ const Game = () => {
   const draw = useCallback(() => {
     gameBoard.current.innerHTML = "";
     drawWorm(gameBoard.current);
-  }, [drawWorm]);
+    drawTarget(gameBoard.current);
+  }, [drawWorm, drawTarget]);
 
   // helper
   const update = useCallback(() => {
     updateWorm(gameBoard.current);
-  }, [updateWorm]);
+    updateTarget();
+  }, [updateWorm, updateTarget]);
 
   // main
   const main = useCallback(

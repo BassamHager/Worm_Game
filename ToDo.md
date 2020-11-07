@@ -6,3 +6,4 @@
 - add animations
 - fix pause button
 - before starting let worm length = 1
+- update all variables to hooks

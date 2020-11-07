@@ -1,12 +1,12 @@
 import { useCallback, useRef, useState } from "react";
 
 const WormState = () => {
-  const [wormSpeed] = useState(0.7);
-  const wormBody = [
+  const [wormSpeed] = useState(5);
+  const [wormBody, setWormBody] = useState([
     { x: 11, y: 11 },
     { x: 11, y: 12 },
     { x: 11, y: 13 },
-  ];
+  ]);
 
   // methods
   // draw worm
@@ -56,19 +56,16 @@ const WormState = () => {
   }, []);
 
   const updateWorm = useCallback(() => {
-    const { x, y } = getInputDirection();
-
     for (let i = wormBody.length - 2; i >= 0; i--) {
-      wormBody[i + 1] = { ...wormBody[i] };
+      setWormBody([...wormBody, (wormBody[i + 1] = { ...wormBody[i] })]);
     }
-    wormBody[0].x += x;
-    wormBody[0].y += y;
-  }, [getInputDirection, wormBody]);
+    const { x, y } = getInputDirection();
+    setWormBody(...wormBody, ((wormBody[0].x += x), (wormBody[0].y += y)));
+  }, [getInputDirection, wormBody, setWormBody]);
 
   return {
     wormSpeed,
     wormBody,
-    // methods
     drawWorm,
     updateWorm,
   };
